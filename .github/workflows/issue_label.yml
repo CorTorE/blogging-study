@@ -1,0 +1,30 @@
+name: Issue Labeling
+
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [closed]
+
+jobs:
+  update-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set "검토 중" label on comment
+        if: github.event_name == 'issue_comment' && github.event.issue.state == 'open'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "검토 중"
+          issue_number: ${{ github.event.issue.number }}
+
+      - name: Set "검토 완료" label on close
+        if: github.event_name == 'issues' && github.event.action == 'closed'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "검토 완료"
+          issue_number: ${{ github.event.issue.number }}
