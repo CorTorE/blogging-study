@@ -44,7 +44,7 @@ jobs:
                await github.rest.repos.createDispatchEvent({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  event_type: "issue close",
+                  event_type: "issue_close",
                   client_payload: {
                     issue_number: issue.number,
                     closed_at : new Date().toISOString(),
