@@ -34,12 +34,6 @@ jobs:
                   repo: context.repo.repo,
                   issue_number: issue.number
                 });
-                await github.rest.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  labels: "검토 완료"
-                });
                 await github.rest.issues.update({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
