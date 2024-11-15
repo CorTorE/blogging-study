@@ -23,6 +23,20 @@ jobs:
           labels: "검토 중"
           issue_number: ${{ github.event.issue.number }}
 
+      - name: Remove all existing labels (issue 이벤트)
+        if : github.event_name == 'issues' && github.event.action == 'closed'
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_number: ${{ github.event.issue.number }}
+
+      - name: Remove all existing labels (repository_dispatch 이벤트)
+        if : github.event_name == 'repository_dispatch' && github.event.action == 'issue_closed'
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_number: ${{ github.event.client_payload.issue_number }}
+          
       - name: Set "검토 완료" label on close (issue 이벤트)
         if: github.event_name == 'issues' && github.event.action == 'closed'
         uses: actions-ecosystem/action-add-labels@v1
