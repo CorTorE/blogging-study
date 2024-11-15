@@ -24,7 +24,7 @@ jobs:
           issue_number: ${{ github.event.issue.number }}
           
   remove-label:
-    runs-on: ubuntu-ltest
+    runs-on: ubuntu-latest
     steps:
       - name: Get all labels (issue 이벤트)
         if: github.event_name == 'issues' && github.event.action == 'closed'
@@ -62,7 +62,7 @@ jobs:
 
   close-issue:
     needs: remove-label
-    runs-on: ubuntu-ltest
+    runs-on: ubuntu-latest
     steps: 
       - name: Set "검토 완료" label on close (issue 이벤트)
         if: github.event_name == 'issues' && github.event.action == 'closed'
