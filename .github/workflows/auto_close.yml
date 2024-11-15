@@ -29,11 +29,6 @@ jobs:
             
             for (const issue of openIssues) {
               if (new Date(issue.created_at) < sevenDaysAgo) {
-                await github.rest.issues.removeAllLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number
-                });
                 await github.rest.issues.update({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
