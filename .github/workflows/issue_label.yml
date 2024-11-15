@@ -31,7 +31,10 @@ jobs:
         id: get_labels
         run: |
           labels=$(gh issue view ${{ github.event.issue.number }} --repo ${{ github.repository }} --json labels --jq '.labels[].name' |  tr '\n' '\n')
-          echo "labels=$labels" >> $GITHUB_OUTPUT
+          echo "labels<<EOF" >> $GITHUB_OUTPUT
+          echo "$labels" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+#          echo "labels=$labels" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
