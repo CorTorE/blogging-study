@@ -24,10 +24,22 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
+              labels: "검토 중"
             });
             
             for (const issue of openIssues) {
               if (new Date(issue.created_at) < sevenDaysAgo) {
+                await github.rest.issues.removeAllLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number
+                });
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  labels: "검토 완료"
+                });
                 await github.rest.issues.update({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
