@@ -26,11 +26,20 @@ jobs:
   remove-label:
     runs-on: ubuntu-ltest
     steps:
-      - name: Get all labels
-        if: (github.event_name == 'issues' && github.event.action == 'closed') || (github.event_name == 'repository_dispatch' && github.event.action == 'issue_closed')
+      - name: Get all labels (issue 이벤트)
+        if: github.event_name == 'issues' && github.event.action == 'closed'
         id: get_labels
         run: |
           labels=$(gh issue view ${{ github.event.issue.number }} --json labels --jq '.labels[].name' | tr '\n' ' ')
+          echo "labels=$labels" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+      - name: Get all labels (repository_dispatch 이벤트)
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'issue_closed'
+        id: get_labels_repo
+        run: |
+          labels=$(gh issue view ${{ github.event.client_payload.issue_number }} --json labels --jq '.labels[].name' | tr '\n' ' ')
           echo "labels=$labels" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +57,7 @@ jobs:
         uses: actions-ecosystem/action-remove-labels@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: ${{ steps.get_labels.outputs.labels }}
+          labels: ${{ steps.get_labels_repo.outputs.labels }}
           issue_number: ${{ github.event.client_payload.issue_number }}
 
   close-issue:
