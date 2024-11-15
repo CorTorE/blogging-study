@@ -5,6 +5,8 @@ on:
     types: [created]
   issues:
     types: [closed]
+  repository_dispatch:
+    types: [issue_closed]
 
 jobs:
   update-label:
@@ -21,10 +23,18 @@ jobs:
           labels: "검토 중"
           issue_number: ${{ github.event.issue.number }}
 
-      - name: Set "검토 완료" label on close
+      - name: Set "검토 완료" label on close (issue 이벤트)
         if: github.event_name == 'issues' && github.event.action == 'closed'
         uses: actions-ecosystem/action-add-labels@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "검토 완료"
           issue_number: ${{ github.event.issue.number }}
+
+      - name: Set "검토 완료" label on close (repository_dispatch 이벤트)
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'issue_closed'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "검토 완료"
+          issue_number: ${{ github.event.client_payload.issue_number }}
