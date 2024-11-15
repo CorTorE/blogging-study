@@ -30,7 +30,7 @@ jobs:
         if: github.event_name == 'issues' && github.event.action == 'closed'
         id: get_labels
         run: |
-          labels=$(gh issue view ${{ github.event.issue.number }} --repo ${{ github.repository }} --json labels --jq '.labels[].name' | tr '\n' ' ')
+          labels=$(gh issue view ${{ github.event.issue.number }} --repo ${{ github.repository }} --json labels --jq '.labels[].name' | jq -R -s -c 'split("\n") | map("\"" + . + "\"") | join("\n")')
           echo "labels=$labels" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,7 +39,7 @@ jobs:
         if: github.event_name == 'repository_dispatch' && github.event.action == 'issue_closed'
         id: get_labels_repo
         run: |
-          labels=$(gh issue view ${{ github.event.client_payload.issue_number }} --repo ${{ github.repository }} --json labels --jq '.labels[].name' | tr '\n' ' ')
+          labels=$(gh issue view ${{ github.event.client_payload.issue_number }} --repo ${{ github.repository }} --json labels --jq '.labels[].name' | jq -R -s -c 'split("\n") | map("\"" + . + "\"") | join("\n")')
           echo "labels=$labels" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
