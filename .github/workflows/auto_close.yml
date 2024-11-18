@@ -34,7 +34,7 @@ jobs:
                   repo: context.repo.repo,
                   issue_number: issue.number,
                   state: 'closed',
-                  state_reason: 'complete'
+                  state_reason: 'completed'
                 });
                await github.rest.repos.createDispatchEvent({
                   owner: context.repo.owner,
