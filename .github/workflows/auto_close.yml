@@ -28,12 +28,14 @@ jobs:
             });
             
             for (const issue of openIssues) {
-              console.log(issue);
               if (new Date(issue.created_at) < sevenDaysAgo) {
                 await github.rest.issues.update({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
+                  label: [
+                  '검토 완료'
+                  ],
                   state: 'closed',
                   state_reason: 'completed'
                 });
